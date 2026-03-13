@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scientific Calculator</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+
+        body{
+            background:#111;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            font-family:Arial;
+        }
+
+        .calculator{
+            background:#222;
+            padding:20px;
+            border-radius:10px;
+            width:320px;
+        }
+
+        .display{
+            background:black;
+            color:#00ff88;
+            font-family:'Press Start 2P', monospace;
+            font-size:22px;
+            padding:20px;
+            text-align:right;
+            margin-bottom:15px;
+            border-radius:6px;
+            overflow-x:auto;
+        }
+
+        .buttons{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:8px;
+        }
+
+        button{
+            padding:18px;
+            font-size:16px;
+            border:none;
+            border-radius:6px;
+            background:#333;
+            color:white;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#555;
+        }
+
+        .operator{
+            background:#ff9500;
+        }
+
+        .equal{
+            background:#00b894;
+        }
+
+        .clear{
+            background:#d63031;
+        }
+
+        .extra{
+            margin-top:10px;
+        }
+
+        .extra-buttons{
+            display:none;
+            grid-template-columns:repeat(4,1fr);
+            gap:8px;
+            margin-top:8px;
+        }
+
+        .toggle{
+            width:100%;
+            margin-top:10px;
+            background:#444;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator">
+
+    <div id="display" class="display">0</div>
+
+    <div class="buttons">
+
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button class="operator" onclick="press('/')">÷</button>
+
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button class="operator" onclick="press('*')">×</button>
+
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button class="operator" onclick="press('-')">−</button>
+
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button class="equal" onclick="calculate()">=</button>
+    <button class="operator" onclick="press('+')">+</button>
+
+    <button class="clear" onclick="clearDisplay()">C</button>
+
+    </div>
+
+        <button class="toggle" onclick="toggleExtra()">Scientific ▼</button>
+
+        <div id="extra" class="extra-buttons">
+
+        <button onclick="press('(')">(</button>
+        <button onclick="press(')')">)</button>
+        <button onclick="press('**')">x²</button>
+        <button onclick="sqrt()">√</button>
+
+        <button onclick="press('Math.sin(')">sin</button>
+        <button onclick="press('Math.cos(')">cos</button>
+        <button onclick="press('Math.tan(')">tan</button>
+        <button onclick="press('Math.log10(')">log</button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        let display = document.getElementById("display");
+        let expression = "";
+
+        function press(value){
+            if(display.innerText === "0") display.innerText="";
+            expression += value;
+            display.innerText = expression;
+        }
+
+        function calculate(){
+            try{
+                expression = eval(expression);
+                display.innerText = expression;
+            }
+            catch{
+                display.innerText="Error";
+                expression="";
+            }
+        }
+
+        function clearDisplay(){
+            expression="";
+            display.innerText="0";
+        }
+
+        function sqrt(){
+            try{
+                expression = Math.sqrt(eval(expression));
+                display.innerText = expression;
+            }
+            catch{
+                display.innerText="Error";
+            }
+        }
+
+        function toggleExtra(){
+            let extra = document.getElementById("extra");
+            extra.style.display = extra.style.display === "grid" ? "none" : "grid";
+        }
+
+
+        /* KEYBOARD SUPPORT */
+
+        document.addEventListener("keydown", function(event){
+
+            let key = event.key;
+
+            if(!isNaN(key)){        // numbers 0-9
+                press(key);
+            }
+
+            else if(["+","-","*","/","."].includes(key)){
+                press(key);
+            }
+
+            else if(key === "Enter"){
+                calculate();
+            }
+
+            else if(key === "Backspace"){
+                expression = expression.slice(0,-1);
+                display.innerText = expression || "0";
+            }
+
+            else if(key === "Escape"){
+                clearDisplay();
+            }
+
+            else if(key === "(" || key === ")"){
+                press(key);
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
